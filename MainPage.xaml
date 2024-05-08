@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MAUIForm.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <Image Source="dotnet_bot.png"/>
+            <Label Text="お名前"/>
+            <Entry x:Name="txtName" Unfocused="txtName_UnFocused" Text=""/>
+            <Button Text="押してね" Clicked="btnClicked">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Source={x:Reference txtName}, Path=Text.Length}" Value="0">
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Label x:Name="lblHello" FontSize="20" FontAttributes="Bold"/>
+            <FlexLayout HorizontalOptions="Center" RadioButtonGroup.GroupName="selects">
+                <RadioButton Content="はい" Value="0" x:Name="rbtYes"/>
+                <RadioButton Content="いいえ" Value="1" x:Name="rbtNo"/>
+            </FlexLayout>
+            <Label>
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference rbtYes},Path=IsChecked}" Value="True">
+                        <Setter Property="Text" Value="「はい」が選択されました。"/>
+                    </DataTrigger>
+                    <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference rbtNo},Path=IsChecked}" Value="True">
+                        <Setter Property="Text" Value="「いいえ」が選択されました。"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+            <FlexLayout HorizontalOptions="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Text="Bold" Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Start"/>
+                    <CheckBox Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Start" Color="Red" x:Name="chkBold"/>
+                    <Label Text="Italic" Grid.Column="3" VerticalOptions="Center" HorizontalOptions="Start"/>
+                    <CheckBox Grid.Column="4" VerticalOptions="Center" HorizontalOptions="Start" Color="Green" x:Name="chkItalic"/>
+                    <Label Text="Blue" Grid.Column="6" VerticalOptions="Center" HorizontalOptions="Start"/>
+                    <CheckBox Grid.Column="7" VerticalOptions="Center" HorizontalOptions="Start" Color="Blue" x:Name="chkBlue"/>
+                </Grid>
+            </FlexLayout>
+            <Label Text="Hello World!!" FontSize="24">
+                <Label.Triggers>
+                    <!-- Bold -->
+                    <DataTrigger TargetType="Label"
+                        Binding="{Binding Source={x:Reference chkBold}, Path=IsChecked}"
+                        Value="true">
+                        <Setter Property="FontAttributes" Value="Bold"/>
+                    </DataTrigger>
+                    <!-- Italic -->
+                    <DataTrigger TargetType="Label"
+                        Binding="{Binding Source={x:Reference chkItalic}, Path=IsChecked}"
+                        Value="true">
+                        <Setter Property="FontAttributes" Value="Italic"/>
+                    </DataTrigger>
+                    <!-- Blue -->
+                    <DataTrigger TargetType="Label"
+                        Binding="{Binding Source={x:Reference chkBlue}, Path=IsChecked}"
+                        Value="true">
+                        <Setter Property="TextColor" Value="Blue"/>
+                    </DataTrigger>
+                    <!-- Bold & Italic -->
+                    <!-- どうもTriggerは上から評価されて、最後にマッチしたTriggerが適用されるらしい -->
+                    <!-- つまり、単体で評価されたコントロールの値をマルチで評価する場合は、最後に持ってこなければダメみたい -->
+                    <MultiTrigger TargetType="Label">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding Source={x:Reference chkBold}, Path=IsChecked}" Value="true"/>
+                            <BindingCondition Binding="{Binding Source={x:Reference chkItalic}, Path=IsChecked}" Value="true"/>
+                        </MultiTrigger.Conditions>
+                        <Setter Property="FontAttributes" Value="Bold, Italic"/>
+                    </MultiTrigger>
+                </Label.Triggers>
+            </Label>
+            <Picker Title="1つ選んでね" x:Name="lstCountries" SelectedIndexChanged="OnChangeCountry" ItemDisplayBinding="{Binding Name}" />
+            <FlexLayout HorizontalOptions="Start">
+                <Label Text="{Binding Source={x:Reference lstCountries}, Path=SelectedItem.Name}" HorizontalOptions="Start"/>
+                <Label x:Name="lblInfo" HorizontalOptions="Start"/>
+            </FlexLayout>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Label Text="R:" Grid.Column="0" Grid.Row="0"/>
+                <Label x:Name="lblRVal" Text="0" Grid.Column="1" Grid.Row="0"/>
+                <Slider x:Name="slR" Minimum="0" Maximum="255" Grid.Column="2" Grid.Row="0" ValueChanged="OnSliderChanged" />
+                <Label Text="G:" Grid.Column="0" Grid.Row="1"/>
+                <Label x:Name="lblGVal" Text="0" Grid.Column="1" Grid.Row="1"/>
+                <Slider x:Name="slG" Minimum="0" Maximum="255" Grid.Column="2" Grid.Row="1" ValueChanged="OnSliderChanged" />
+                <Label Text="B:" Grid.Column="0" Grid.Row="2"/>
+                <Label x:Name="lblBVal" Text="0" Grid.Column="1" Grid.Row="2"/>
+                <Slider x:Name="slB" Minimum="0" Maximum="255" Grid.Column="2" Grid.Row="2" ValueChanged="OnSliderChanged" />
+                <Label x:Name="lblColoredText" Text="Hello !!" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" FontSize="24" FontAttributes="Bold"/>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
