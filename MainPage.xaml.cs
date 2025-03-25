@@ -36,7 +36,8 @@ public partial class MainPage : ContentPage
 		lblGVal.Text = g.ToString("x2");
 		lblBVal.Text = b.ToString("x2");
 		Color col = Color.FromRgb(r, g, b);
-		lblColoredText.TextColor = col;
+		//lblColoredText.TextColor = col;
+		scView.BackgroundColor = col;
 	}
 }
 public class Country {
